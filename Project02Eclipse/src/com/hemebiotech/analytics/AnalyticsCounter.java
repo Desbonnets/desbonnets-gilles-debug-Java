@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class AnalyticsCounter {
 
-	private static Map<String, Integer> symptomsCount = new HashMap<>();
+	private static final Map<String, Integer> symptomsCount = new HashMap<>();
 
 	public static void main(String[] args) throws IOException {
 		ISymptomReader symptomReader = new ReadSymptomDataFromFile("symptoms.txt");
@@ -23,10 +23,7 @@ public class AnalyticsCounter {
 		}
 
 		// next generate output
-		FileWriter writer = new FileWriter ("result.out");
-		for (String symptom : symptomsCount.keySet()) {
-			writer.write(symptom + "\t" + symptomsCount.get(symptom) + "\n");
-		}
-		writer.close();
+		ISymptomWriter symptomWriter = new WriteSymptomDataToFile();
+		symptomWriter.writeSymptoms(symptomsCount);
 	}
 }
