@@ -13,8 +13,7 @@ public class WriteSymptomDataToFile implements ISymptomWriter {
 
         try (FileWriter writer = new FileWriter("result.out")) {
             for (Map.Entry<String, Integer> entry : symptomsCount.entrySet()) {
-                String symptom = symptomsCount.keySet().toString();
-                writer.write(symptom + "\t" + entry + "\n");
+                writer.write(entry + "\n");
             }
         } catch (IOException e) {
             logger.info(e.getMessage());
