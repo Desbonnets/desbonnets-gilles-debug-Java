@@ -1,43 +1,87 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.List;
+import java.util.*;
 
-public class AnalyticsCounter {
-	private static int headacheCount = 0;	// initialize to 0
-	private static int rashCount = 0;		// initialize to 0
-	private static int pupilCount = 0;		// initialize to 0
+public class AnalyticsCounter implements ISymptomAnalyticsCounter {
 
-	public static void main(String[] args) throws Exception {
-		// first get input
-		BufferedReader reader = new BufferedReader (new FileReader("../symptoms.txt"));
-		String line = reader.readLine();
-
-		int i = 0;	// set i to 0
-		while (line != null) {
-			i++;	// increment i
-			System.out.println("symptom from file: " + line);
-			if (line.equals("headache")) {
-				headacheCount++;
-				System.out.println("number of headaches: " + headacheCount);
-			}
-			else if (line.equals("rash")) {
-				rashCount++;
-			}
-			else if (line.contains("pupils")) {
-				pupilCount++;
-			}
-
-			line = reader.readLine();	// get another symptom
+	/**
+	 * Counts the occurrences of symptoms in the provided list and sorts the results based on the specified
+	 * sorting criterion.
+	 *
+	 * @param symptoms     List of symptoms (each symptom is represented as a string).
+	 * @param sortCriteria Sorting criterion to apply on the results. The possible values are:
+	 *                     <ul>
+	 *                         <li>"alphabetical_asc" : Sorts the symptoms alphabetically in ascending order.</li>
+	 *                         <li>"alphabetical_desc" : Sorts the symptoms alphabetically in descending order.</li>
+	 *                         <li>"frequency_asc" : Sorts the symptoms by increasing frequency (number of occurrences).</li>
+	 *                         <li>"frequency_desc" : Sorts the symptoms by decreasing frequency (number of occurrences).</li>
+	 *                     </ul>
+	 * @return A {@code Map<String, Integer>} containing the symptoms as keys and their respective number of
+	 *         occurrences as values, sorted according to the specified criterion.
+	 *
+	 * @throws IllegalArgumentException If the provided sorting criterion is not valid.
+	 */
+	public Map<String, Integer> GetAnalyticsCounterSort(List<String> symptoms, String sortCriteria) {
+		// Validate the symptoms list
+		if (symptoms == null) {
+			throw new IllegalArgumentException("The symptoms list cannot be null.");
+		}
+		if (symptoms.isEmpty()) {
+			return Collections.emptyMap();  // Return an empty map if the list is empty
 		}
 
-		// next generate output
-		FileWriter writer = new FileWriter ("result.out");
-		writer.write("headache: " + headacheCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("dilated pupils: " + pupilCount + "\n");
-		writer.close();
+		// Validate the sorting criterion
+		if (sortCriteria == null || sortCriteria.trim().isEmpty()) {
+			throw new IllegalArgumentException("The sorting criterion cannot be null or empty.");
+		}
+
+		// Create a HashMap to count the occurrences of each symptom
+		Map<String, Integer> symptomsCount = new HashMap<>();
+
+		// Count occurrences of symptoms
+		for (String symptom : symptoms) {
+			if (symptom != null) {  // Handle null symptoms in the list (optional)
+				symptomsCount.put(symptom, symptomsCount.getOrDefault(symptom, 0) + 1);
+			}
+		}
+
+		// Sort the results based on the sorting criterion
+		List<Map.Entry<String, Integer>> sortedList = new ArrayList<>(symptomsCount.entrySet());
+
+		// Handle different sorting criteria
+		switch (sortCriteria.toLowerCase()) {
+			case "alphabetical_asc":
+				// Sort by alphabetical order (ascending) of the symptoms (keys)
+				sortedList.sort(Map.Entry.comparingByKey());
+				break;
+
+			case "alphabetical_desc":
+				// Sort by alphabetical order (descending) of the symptoms (keys)
+				sortedList.sort(Map.Entry.<String, Integer>comparingByKey().reversed());
+				break;
+
+			case "frequency_asc":
+				// Sort by increasing frequency (values)
+				sortedList.sort(Map.Entry.comparingByValue());
+				break;
+
+			case "frequency_desc":
+				// Sort by decreasing frequency (values)
+				sortedList.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+				break;
+
+			default:
+				throw new IllegalArgumentException("Unknown sorting criterion. " +
+						"Use 'alphabetical_asc', 'alphabetical_desc', 'frequency_asc', or 'frequency_desc'."
+				);
+		}
+
+		// Convert the sorted list back to a LinkedHashMap to preserve the sorted order
+		Map<String, Integer> sortedSymptomsCount = new LinkedHashMap<>();
+		for (Map.Entry<String, Integer> entry : sortedList) {
+			sortedSymptomsCount.put(entry.getKey(), entry.getValue());
+		}
+
+		return sortedSymptomsCount;
 	}
 }
