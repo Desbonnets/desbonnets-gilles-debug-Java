@@ -34,7 +34,7 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	 * @throws IllegalStateException If the filepath is invalid or the file cannot be opened.
 	 */
 	@Override
-	public List<String> GetSymptoms() {
+	public List<String> getSymptoms() {
 		List<String> result = new ArrayList<>();
 
 		// Validate that filepath is not null

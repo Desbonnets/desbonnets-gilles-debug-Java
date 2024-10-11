@@ -18,7 +18,7 @@ public class Main {
         try {
             // Read symptoms from file
             ISymptomReader symptomReader = new ReadSymptomDataFromFile("symptoms.txt");
-            List<String> symptoms = symptomReader.GetSymptoms();
+            List<String> symptoms = symptomReader.getSymptoms();
 
             // Validate that symptoms were read successfully
             if (symptoms.isEmpty()) {
@@ -28,7 +28,7 @@ public class Main {
 
             // Process the symptoms: count and sort them
             ISymptomAnalyticsCounter symptomsAnalyticsCount = (ISymptomAnalyticsCounter) new AnalyticsCounter();
-            Map<String, Integer> symptomsCount = symptomsAnalyticsCount.GetAnalyticsCounterSort(symptoms, "frequency_asc");
+            Map<String, Integer> symptomsCount = symptomsAnalyticsCount.getAnalyticsCounterSort(symptoms, "alphabetical_asc");
 
             // Write the sorted results to the output file
             ISymptomWriter symptomWriter = new WriteSymptomDataToFile();

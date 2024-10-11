@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface ISymptomAnalyticsCounter {
 
-    Map<String, Integer> GetAnalyticsCounterSort(List<String> symptoms, String sortCriteria);
+    Map<String, Integer> getAnalyticsCounterSort(List<String> symptoms, String sortCriteria);
 }

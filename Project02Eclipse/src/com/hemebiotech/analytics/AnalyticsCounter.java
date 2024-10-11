@@ -21,7 +21,7 @@ public class AnalyticsCounter implements ISymptomAnalyticsCounter {
 	 *
 	 * @throws IllegalArgumentException If the provided sorting criterion is not valid.
 	 */
-	public Map<String, Integer> GetAnalyticsCounterSort(List<String> symptoms, String sortCriteria) {
+	public Map<String, Integer> getAnalyticsCounterSort(List<String> symptoms, String sortCriteria) {
 		// Validate the symptoms list
 		if (symptoms == null) {
 			throw new IllegalArgumentException("The symptoms list cannot be null.");
